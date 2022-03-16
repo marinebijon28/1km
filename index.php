@@ -66,6 +66,23 @@
         }
     }
 
+    function sortTabTriebubble(&$result) {
+        for ($i = 0; $i < count($result); $i++) {
+            $bool = false;
+            for ($j = 0; $j + 1 < count($result); $j++) {
+                if ($result[$j]->km > $result[$j + 1]->km) {
+                    $bool = true;
+                    $tmp = $result[$j];
+                    $result[$j] = $result[$j + 1];
+                    $result[$j + 1] = $tmp;
+                }
+            }
+            if ($bool == false) {
+                break;
+            }
+        }
+    }
+
     function numberVelo($objvelo, $result) {
         foreach ($objvelo->data->stations as $key => $value) {
             for ($i = 0; $i < count($result); $i++){
@@ -94,7 +111,7 @@
             }
         } 
 
-        sortTabTrieSelection($result);
+        sortTabTriebubble($result);
 
         $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json');
         $objvelo = json_decode($json);
