@@ -36,6 +36,21 @@
         return null;
     }
 
+    function calculDistancePythagore($lat, $lng, $value, &$km) {
+         // transform in radiant == °
+         $lngb = $value->lon * (M_PI / 180);
+         $latb = $value->lat * (M_PI / 180);
+ 
+        $kmx = ($lngb - $lng) * cos($lat + $latb / 2);
+        $kmy = ($latb - $lat);
+        $kmz = sqrt((($kmx ** 2) + ($kmy ** 2)));
+        $km = 1.852 * 60 * $kmz;
+          
+        if ($km <= 1)
+            return $value;
+        return null;
+    }
+
     function sortTabTrieFusion(&$result) {
         for ($i = 0; $i < count($result); $i++) {
             $tmpmin = $i;
@@ -72,23 +87,13 @@
         $i = 0;
         foreach ($obj->data->stations as $key => $value)
         {
-           // print_r($value->lat);
-           // echo "lat : " . $value->lat . " lon : " .  $value->lon . '<br/>';
-            if (($res = calculDistanceLoiDesSinus($lat, $lng, $value, $km)) != null){
+            if (($res = calculDistanceHaversine($lat, $lng, $value, $km)) != null){
                $result[$i] = $res; 
                $result[$i]->km = $km;
                $i++;
             }
-
-
-            // $kmx = ($value->lon - $lng) * cos(($lat + $value->lat) / 2);
-            // $kmy = ($lat - $value->lat);
-            // //echo $kmx . " " . $kmy . '<br/>';
-            // $kmz = sqrt($kmx ** 2 + $kmy ** 2);
-            //$km = (1852 * 60) * $kmz;
-            //echo $km . '<br/>';
-            //$long
         } 
+
         sortTabTrieFusion($result);
 
         $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json');
@@ -96,11 +101,6 @@
 
         $result = numberVelo($objvelo, $result);
 
-        // stations_id get nv api pour entrer une nouvelle cle avec le numéro de velo 
-
-        echo('<pre>');
-        print_r($result);
-        echo('</pre>');
         return $result;
     }
 
