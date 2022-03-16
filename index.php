@@ -37,6 +37,19 @@
         }
       //  print_r($result);
     }
+
+    function numberVelo($objvelo, $result) {
+       // echo('<pre>');
+        //print_r($objvelo);
+        //echo('</pre>');
+        foreach ($objvelo->data->stations as $key => $value) {
+            for ($i = 0; $i < count($result); $i++){
+                if ($result[$i]->station_id == $value->station_id)
+                    $result[$i]->number_velo = $value->num_bikes_available;  
+            }
+        }        
+        return $result;
+    }
     
     function trouveStations($lat, $lng) {
         $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json');
@@ -76,6 +89,11 @@
             //$long
         } 
         sortTabTrieFusion($result);
+
+        $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json');
+        $objvelo = json_decode($json);
+
+        $result = numberVelo($objvelo, $result);
 
         // stations_id get nv api pour entrer une nouvelle cle avec le numéro de velo 
 
