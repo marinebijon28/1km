@@ -96,6 +96,52 @@
 
     }
 
+    function tamiser(&$arbre, $noeud, $n) {
+        // 22
+        $k = $noeud;
+        // 44
+        $j = 2 * $k;
+
+        echo "n : " . $n . '<br/>';
+        // n = 44
+        while ($j <= $n)
+        {
+            // j : 3 n : 21
+            if ($j <= $n && $arbre[$j]->km < $arbre[$j + 1]->km) {
+                $j++;
+                echo "premier";
+            }
+            if ($arbre[$k]->km > $arbre[$j]->km) {
+                echo "j : " . $j . " n :" . $n . "k :" . $k . '<br/>';
+                echo "arbre k : " . $arbre[$k]->km . " arbre j :" . $arbre[$j]->km . '<br/>';;
+                $tmp = $arbre[$k];
+                $arbre[$k] = $arbre[$j];
+                $arbre[$j] = $tmp;
+                $k = $j;
+                $j = 2 * $k;
+                echo "deuxieme";
+            }
+            else {
+                $j = $n + 1;
+                echo "troisieme";
+            }
+        }
+    }
+
+    function sortTabTrieParTas(&$result) {
+        $i = count($result) / 2;
+        echo "i : " . $i % 2;
+       if ($i % 2 == 0)
+          tamiser($result, $i, count($result));
+       else if ($i % 2 == 1)
+       {
+            $tmp = $result[$i];
+            $result[$i] = $result[1];
+            $result[1] = $tmp;
+            tamiser($result, 1, $i - 1);
+        }
+    }
+
     function numberVelo($objvelo, $result) {
         foreach ($objvelo->data->stations as $key => $value) {
             for ($i = 0; $i < count($result); $i++){
@@ -124,12 +170,12 @@
             }
         } 
 
-        sortTabTrieInsertion($result);
+        sortTabTrieParTas($result);
 
         $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json');
         $objvelo = json_decode($json);
 
-     //   $result = numberVelo($objvelo, $result);
+       $result = numberVelo($objvelo, $result);
 
         return $result;
     }
