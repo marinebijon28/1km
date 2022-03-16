@@ -51,7 +51,7 @@
         return null;
     }
 
-    function sortTabTrieInsertion(&$result) {
+    function sortTabTrieSelection(&$result) {
         for ($i = 0; $i < count($result); $i++) {
             $tmpmin = $i;
             for ($j = $i; $j < count($result); $j++) {
@@ -94,7 +94,7 @@
             }
         } 
 
-        sortTabTrieinsertion($result);
+        sortTabTrieSelection($result);
 
         $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json');
         $objvelo = json_decode($json);
