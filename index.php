@@ -66,7 +66,7 @@
         }
     }
 
-    function sortTabTriebubble(&$result) {
+    function sortTabTrieBubble(&$result) {
         for ($i = 0; $i < count($result); $i++) {
             $bool = false;
             for ($j = 0; $j + 1 < count($result); $j++) {
@@ -81,6 +81,19 @@
                 break;
             }
         }
+    }
+
+    function sortTabTrieInsertion(&$result) {
+        for ($i = 0; $i < count($result); $i++) {
+            $j = $i;
+            $tmp = $result[$i];
+            while ($j > 0 && $result[$j - 1]->km > $tmp->km) {
+                $result[$j] = $result[$j - 1];
+                $j--;
+            }
+           $result[$j] = $tmp;
+        }
+
     }
 
     function numberVelo($objvelo, $result) {
@@ -111,12 +124,12 @@
             }
         } 
 
-        sortTabTriebubble($result);
+        sortTabTrieInsertion($result);
 
         $json = file_get_contents('https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json');
         $objvelo = json_decode($json);
 
-        $result = numberVelo($objvelo, $result);
+     //   $result = numberVelo($objvelo, $result);
 
         return $result;
     }
@@ -125,4 +138,4 @@
     print_r(trouveStations(48.85, 2.38));
     echo "</pre>";
 
-?>Ò
+?>
