@@ -104,7 +104,7 @@
 
         echo "n : " . $n . '<br/>';
         // n = 44
-        while ($j <= $n)
+        while ($j  + 1 <= $n)
         {
             // j : 3 n : 21
             if ($j <= $n && $arbre[$j]->km < $arbre[$j + 1]->km) {
@@ -131,14 +131,19 @@
     function sortTabTrieParTas(&$result) {
         $i = count($result) / 2;
         echo "i : " . $i % 2;
-       if ($i % 2 == 0)
-          tamiser($result, $i, count($result));
-       else if ($i % 2 == 1)
-       {
-            $tmp = $result[$i];
-            $result[$i] = $result[1];
-            $result[1] = $tmp;
-            tamiser($result, 1, $i - 1);
+
+        $j = 0;
+        while ($j < count($result)) {
+            if ($i % 2 == 0)
+                tamiser($result, $j, count($result));
+            else if ($i % 2 == 1)
+            {
+                $tmp = $result[$i];
+                $result[$i] = $result[1];
+                $result[1] = $tmp;
+                tamiser($result, 1, $j - 1);
+            }
+            $j++;
         }
     }
 
